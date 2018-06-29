@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Create a heatmap layer</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+    </style>
+</head>
+<body>
+
+
+<div id='map'></div>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1Ijoic2hydXRpa2FyIiwiYSI6ImNqZWVraDN3bTFiNzgyeG1rNnlvbWU5YWEifQ.3Uq8vnAz-XUAyL4YJ60l6Q';
+var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/dark-v9',
+    center: [-120, 50],
+    zoom: 2
+});
+
+map.on('load', function() {
+    // Add a geojson point source.
+    // Heatmap layers also work with a vector tile source.
+    map.addSource("polygon_one", 
+            {
+            "type":"geojson",
+            "data":{
+                "type":"FeatureCollection",
+                    "features":[
+                        {"type":"Feature","properties":[],"geometry":{"coordinates":[[[73.045157852226,26.303612426466],[73.045501174966,26.291685547272],[73.051166000414,26.299611287628],[73.045157852226,26.303612426466]]],"type":"Polygon"}},
+                    ]
+                }
+            });
+
+            map.addSource("polygon_two", 
+            {
+            "type":"geojson",
+            "data":{
+                "type":"FeatureCollection",
+                    "features":[
+                        {"type":"Feature","properties":[],"geometry":{"coordinates":[[[73.01923698434584,26.286793889676773],[73.01726287851736,26.274403503526514],[73.02696174635398,26.277635905719848],[73.02972176719453,26.28963931883034],[73.01923698434584,26.286793889676773]]],"type":"Polygon"}},
+                    ]
+                }
+            });
+            map.addLayer({
+                "id": "quota-one",
+                "type": "line",
+                "source": "polygon_one",
+                "layout": {
+                      "line-cap": "round",
+                      "line-join": "round"
+                    },
+                    "paint": {
+                      "line-color": "red",
+                      "line-width": 3
+                    },
+                "filter": ["==", "$type", "Polygon"]
+            });
+
+            map.addLayer({
+                "id": "quota-two",
+                "type": "line",
+                "source": "polygon_two",
+                "layout": {
+                      "line-cap": "round",
+                      "line-join": "round"
+                    },
+                    "paint": {
+                      "line-color": "green",
+                      "line-width": 3
+                    },
+                "filter": ["==", "$type", "Polygon"]
+            });
+             
+            map.flyTo({center:[73.01923698434584,26.286793889676773],zoom: 13});
+        
+});
+</script>
+
+</body>
+</html>
